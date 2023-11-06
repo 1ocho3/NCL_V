@@ -47,7 +47,7 @@ Para este reto usaremos volatility. En este caso usaré volatility2, se puede co
 &nbsp;  
 
 
-Lo primero que haré será un `kdbgscan` que devuelve los posibles valores KDBG. La razón por la que uso este plugin y no imageinfo es simple y llanamente porque la búsqueda es más exahustiva y tiene una mayor probabilidad de acierto identificando el perfil del volcado frente a imageinfo.
+Lo primero que haré será un `kdbgscan` que devuelve los posibles valores KDBG. La razón por la que uso este plugin y no `imageinfo` es simple y llanamente porque la búsqueda es más exahustiva y tiene una mayor probabilidad de acierto identificando el perfil del volcado frente a imageinfo.
 ```bash
 vol.py -f memory.dmp kdbgscan
 ```
