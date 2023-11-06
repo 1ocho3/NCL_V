@@ -42,7 +42,7 @@ El resultado es un fichero llamado `memory.dmp`
 
 #### ANÁLISIS INICIAL:
 
-Para este reto usaremos volatility. En este caso usaré volatility2, se puede conseguir el mismo resultado con volatility3, solo se debe que omitir los pasos de identificación de perfil, y buscar los comandos homólogos en esta versión.  
+Para este reto usaremos volatility. En este caso usaré volatility2, se puede conseguir el mismo resultado con volatility3, solo se debe omitir los pasos de identificación de perfil, y buscar los comandos homólogos en esta versión.  
 
 &nbsp;  
 
