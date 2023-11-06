@@ -150,7 +150,7 @@ Vemos que la contraseña en texto plano se asemeja a: __S_IS_A_STRONG_SECURITY_P
 
 Con esto conseguimos vislumbrar como será la contraseña al completo: __THIS_IS_A_STRONG_SECURITY_PWD__ 
 
-Viendo que las i's y las S's se han cambiado por 1 y 5 la contraseña quedaría de la siguiente forma tomando las siguiente posibilidades:
+Viendo que las i's y las S's se han cambiado por 1 y 5 la contraseña quedaría de la siguiente forma tomando las siguiente posibilidades:  
 `TH15_1S_4_sTr0ng_s3cUrit1_PwD`  
 `tH15_1S_4_sTr0ng_s3cUrit1_PwD`  
 `Th15_1S_4_sTr0ng_s3cUrit1_PwD`  
@@ -182,13 +182,14 @@ Probamos las contraseñas y descubrimos que __¡BINGO!__ la contraseña es la op
 
 Una vez dentro de la base de datos vemos tres credenciales guardados:  
 
-El `OnlyFans` de Peter.
-El Usuario y contraseña de la plataforma de ajedrez de peter.  
-Y las credenciales de su ordenador:  
+El `OnlyFans` de Peter.  
+El Usuario y contraseña de la plataforma de ajedrez de peter.    
+Y las credenciales de su ordenador:    
 
 ![Peter_Credentiasl_Even_OnlyFans_...._Incredible](https://github.com/1ocho3/NCL_V/blob/main/imagenes/Peter_Credentiasl_Even_OnlyFans_...._Incredible.png?raw=true)  
   
-Obviando todo lo que es OFbviamente prescindible y centrándonos en nuestros valores, sobre todo en el de __CONFIDENCIALIDAD__, entraremos directos en los credenciales que parecen apuntar al ordenador de peter `peter computer`  
+Obviando todo lo que es OFbviamente prescindible y centrándonos en nuestros valores, sobre todo en el de __CONFIDENCIALIDAD__, entraremos directos en los credenciales que parecen apuntar al ordenador de peter   
+`peter computer`   
 
 ![Contraseña_sacada_del_ordenador_de_Peter_A_través_de_la_BD_de_KeePass](https://github.com/1ocho3/NCL_V/blob/main/imagenes/Pete_Come_Pato_hmmmmm.png?raw=true)  
 
@@ -202,6 +203,8 @@ No lo dudes!!
 
 
 ```txt
+
+
  ________   ________  ________  ________   ________  ________          ________   ________  
 |\   ___  \|\   __  \|\   ____\|\   ___  \|\   __  \|\   ____\        |\_____  \ |\_____  \ 
 \ \  \\ \  \ \  \|\  \ \  \___|\ \  \\ \  \ \  \|\  \ \  \___|        \|____|\ /_ \|___/  /|
@@ -212,14 +215,4 @@ No lo dudes!!
                                                                                                                                                      
 
                                                                                       
-                                                                              
-        :::'###:::'##::: ##'########:'########:'########:'######::                    
-        ::'## ##:::###:: ##:##.... ##:##.... ##:##.....:'##... ##:                    
-        :'##:. ##::####: ##:##:::: ##:##:::: ##:##:::::::##:::..::                    
-        '##:::. ##:## ## ##:##:::: ##:########::######::. ######::                    
-         #########:##. ####:##:::: ##:##.. ##:::##...::::..... ##:                    
-         ##.... ##:##:. ###:##:::: ##:##::. ##::##::::::'##::: ##:                    
-         ##:::: ##:##::. ##:########::##:::. ##:########. ######::                    
-        ..:::::..:..::::..:........::..:::::..:........::......:::     
-                                                     
 ```
