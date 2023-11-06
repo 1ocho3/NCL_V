@@ -61,7 +61,7 @@ Observar los procesos es uno de los puntos de referencia cuando no sepamos por d
 ```bash
 vol.py -f memory.dmp --profile=Win10x64_18362 pslist
 ```
-Este es el otput que recibimos (simplificado), donde podemos observar el proceso `KeePass`
+Este es el output que recibimos (simplificado), donde podemos observar el proceso `KeePass`
 
 Volatility Foundation Volatility Framework 2.6.1  
 
@@ -84,7 +84,7 @@ vol.py -f memory.dmp --profile=Win10x64_18362 memdump --pid 4288 -D [DIRECTORIO 
 ![KeePass.dmp](https://github.com/1ocho3/NCL_V/blob/main/imagenes/KeePass_dump.png?raw=true)  
 
 
-Una vez tenemos la memoria del proceso volcada, antes que tratar de hacer nada, vamos a investigar información del programa.  
+Una vez tenemos la memoria del proceso volcada, antes que tratar de hacer nada más, vamos a investigar la información del programa.  
 Con `strings` y `grep` hacemos una búsqueda con el fin de tratar de averiguar la versión del programa.
 
 
@@ -195,10 +195,10 @@ Obviando todo lo que es OFbviamente prescindible y centrándonos en nuestros val
 
 ......   ·.·    Sin comentarios....
 
-__CONSEGUIDO!!__ Recuerda, al igual que un llavero sirve para perder todas las llaves a la vez, KeepPass sirve para filtrar todas tus contrseñas a la vez.  
+__CONSEGUIDO!!__ Recuerda, al igual que un llavero sirve para perder todas las llaves a la vez, KeepPass sirve para filtrar todas tus contraseñas a la vez.  
 No te olvides, nada es seguro ante el hacking, y todo es vulnerable. Los sistemas son seguros hasta que dejan de serlos.  
 
-Si tienes algún tipo de información comprometedora, ten por seguro que el sitio más seguro para guardar su contraseña es tu memoria. 
+Si tienes algún tipo de información comprometedora, ten por seguro que el sitio más protegido para guardar tu contraseña es tu memoria. 
 No lo dudes!!
 
 
