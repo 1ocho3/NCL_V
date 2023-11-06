@@ -42,12 +42,12 @@ El resultado es un fichero llamado `memory.dmp`
 
 #### ANÁLISIS INICIAL:
 
-Para este reto usaremos volatility. En este caso usaré volatility2, se puede conseguir el mismo resultado con volatility3, solo se debe que omitir los pasos de identificación de perfil, y buscar los comandos homólogos en esta versión.  
+Para este reto usaremos volatility. En este caso usaré volatility2, se puede conseguir el mismo resultado con volatility3, solo se debe omitir los pasos de identificación de perfil, y buscar los comandos homólogos en esta versión.  
 
 &nbsp;  
 
 
-Lo primero que haré será un `kdbgscan` que devuelve los posibles valores KDBG. La razón por la que uso este plugin y no imageinfo es simple y llanamente porque la búsqueda es más exahustiva y tiene una mayor probabilidad de acierto identificando el perfil del volcado frente a imageinfo.
+Lo primero que haré será un `kdbgscan` que devuelve los posibles valores KDBG. La razón por la que uso este plugin y no `imageinfo` es simple y llanamente porque la búsqueda es más exahustiva y tiene una mayor probabilidad de acierto identificando el perfil del volcado frente a imageinfo.
 ```bash
 vol.py -f memory.dmp kdbgscan
 ```
@@ -55,7 +55,7 @@ vol.py -f memory.dmp kdbgscan
 
 Desde ahora en adelante, especificaremos este perfil cada vez que ejecutemos un plugin.
 
-Lo primero que pensé fue en descargar inmediatamente los hashes NTLM del volcado pero pronto descubriría que ese no es el camino.
+Lo siguiente que pensé fue en descargar inmediatamente los hashes NTLM del volcado pero pronto descubriría que ese no era el camino.
 Observar los procesos es uno de los puntos de referencia cuando no sepamos por donde seguir. Y en este caso hay un proceso que destaca sobre el resto.
 
 ```bash
@@ -84,7 +84,7 @@ vol.py -f memory.dmp --profile=Win10x64_18362 memdump --pid 4288 -D [DIRECTORIO 
 ![KeePass.dmp](https://github.com/1ocho3/NCL_V/blob/main/imagenes/KeePass_dump.png?raw=true)  
 
 
-Una vez tenemos la memoria del proceso volcada, antes que tratar de hacer nada, vamos a investigar información sobre el programa.  
+Una vez tenemos la memoria del proceso volcada, antes que tratar de hacer nada, vamos a investigar información del programa.  
 Con `strings` y `grep` hacemos una búsqueda con el fin de tratar de averiguar la versión del programa.
 
 
