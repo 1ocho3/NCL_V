@@ -55,7 +55,7 @@ vol.py -f memory.dmp kdbgscan
 
 Desde ahora en adelante, especificaremos este perfil cada vez que ejecutemos un plugin.
 
-Lo primero que pensé fue en descargar inmediatamente los hashes NTLM del volcado pero pronto descubriría que ese no es el camino.
+Lo siguiente que pensé fue en descargar inmediatamente los hashes NTLM del volcado pero pronto descubriría que ese no era el camino.
 Observar los procesos es uno de los puntos de referencia cuando no sepamos por donde seguir. Y en este caso hay un proceso que destaca sobre el resto.
 
 ```bash
