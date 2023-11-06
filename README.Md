@@ -91,15 +91,9 @@ Con `strings` y `grep` hacemos una búsqueda con el fin de tratar de averiguar l
 ```bash
 strings 4288.dmp | grep KeePass
 ```
-Que devuelve lo siguiente:
+Que devuelve lo siguiente:  
 
-<span style="color: green;">\Device\HarddiskVolume3\Program Files\KeePass Password Safe 2\KeePass.exe  
-\Device\HarddiskVolume3\Users\peter\AppData\Local\Temp\is-SVPA5.tmp\</span><span style="background-color: yellow; color: red;">KeePass-2.53.1-Setup.tmp</span>  
-<span style="color: green;">{6D809377-6AF0-444B-8957-A3773F02200E}\KeePass Password Safe 2\KeePass.exe  
-C:\Program Files\KeePass Password Safe 2\KeePass.exe  
-KeePass.exe  
-KeePass.exe  
-</span>  
+![KeePass_2.53.1](https://github.com/1ocho3/NCL_V/blob/main/imagenes/KeePass_2.53.1.png?raw=true)
 
 Nos encontramos con la versión 2.53.1, en el momento de la competición la última versión es la 2.55.
 Sabemos que estamos trabajando con una versión anterior, podemos buscar alguna vulnerabilidad.  
@@ -115,11 +109,7 @@ dotnet run 4288.dmp
 ```
 Pero en una primera instancia descubrimos que no consigue sacar la contraseña:
 
-<span style="color: green;">Password candidates (character positions):  
-Unknown characters are displayed as "●"  
-1.:     ●  
-2.:     , 1,  ,  
-Combined: ●{, 1,  } </span>  
+![4288_PoC_Output](https://github.com/1ocho3/NCL_V/blob/main/imagenes/4288_PoC_Output.png?raw=true)
 
 Después de una investigación mas profunda sobre el PoC descubrimos que podemos ejecutarlo, sobre un volcado del proceso o sobre el volcado de memoria completo de una máquina.   
 Con esto en mente, ahora tratamos de hacer lo mismo pero con nuestro volcado de memoria.  
@@ -128,57 +118,108 @@ Con esto en mente, ahora tratamos de hacer lo mismo pero con nuestro volcado de 
 ```bash
 dotnet run memory.dmp
 ```  
-<span style="color: green;">Combined: ●{Ú, B, \, à, 9, ¿, Ë, ½, , o, ß, =, k, À, Ó, Ì, Î, å, O, y, E, Ü, $, ,, 4, «, Á, g, ¬, ;, , , ê, M, æ, p, , ô, , , r, ¤, ¡, @, ¢, I, ®, ÿ, d, e, Ð, Â, w, ü, , !, t, º, <, ÷, Ñ, 7, S, Ô, ð, 3, ,  , T, G, ×, Æ, F, Q, Ä, %, `, L, ú, 1, ­, Ø, ., ), 8, ¨, 0, µ, , ø, z, °, {, É, ,  , H, 2, ', (, ·, s, h, , R, ç, , |, W, a, D, 5, , , , A, î, , C, "}{ , °, µ, 1}5_1S_4_sTr0ng{P, _}s3cUrit1{w, _}PwD</span>  
+![memory.dmp_PoC_Ouput](https://github.com/1ocho3/NCL_V/blob/main/imagenes/memory.dmp_PoC_Ouput.png?raw=true)  
+
 Tenemos la contraseña a falta de cerciorar cuales son los caracteres inciales, una de las características de esta vulnerabilidad es que el primer caracter no se puede extraer y los siguientes pueden ser inexactos. Pero analicemos el output:  
 
 Si separamos lo que nos devuelve nos encontramos con lo siguiente:  
-●  --> Primer caracter (desconocido)  
-{Ú, B, \, à, 9, ¿, Ë, ½, , o, ß, =, k, À, Ó, Ì, Î, å, O, y, E, Ü, $, ,, 4, «, Á, g, ¬, ;, , , ê, M, æ, p, , ô, , , r, ¤, ¡, @, ¢, I, ®, ÿ, d, e, Ð, Â, w, ü, , !, t, º, <, ÷, Ñ, 7, S, Ô, ð, 3, ,  , T, G, ×, Æ, F, Q, Ä, %, `, L, ú, 1, ­, Ø, ., ), 8, ¨, 0, µ, , ø, z, °, {, É, ,  , H, 2, ', (, ·, s, h, , R, ç, , |, W, a, D, 5, , , , A, î, , C, "} --> Posibles 2º carácter  
-{ , °, µ, 1}  --> Posibles 3er carácter  
+
+●  --> Primer caracter (desconocido) 
+
+{Ú, B, \, à, 9, ¿, Ë, ½, , o, ß, =, k, À, Ó, Ì, Î, å, O, y, E, Ü, $, ,, 4, «, Á, g, ¬, ;, , , ê, M, æ, p, , ô, , , r, ¤, ¡, @, ¢, I, ®, ÿ, d, e, Ð, Â, w, ü, , !, t, º, <, ÷, Ñ, 7, S, Ô, ð, 3, ,  , T, G, ×, Æ, F, Q, Ä, %, `, L, ú, 1, ­, Ø, ., ), 8, ¨, 0, µ, , ø, z, °, {, É, ,  , H, 2, ', (, ·, s, h, , R, ç, , |, W, a, D, 5, , , , A, î, , C, "} --> Posibles 2º carácter 
+
+{ , °, µ, 1}  --> Posibles 3er carácter 
+
 5_1S_4_sTr0ng  --> Caracteres extraídos   
+
 {P, _}  --> Posibles 17º carácter   
+
 s3cUrit1  --> Caracteres extraídos  
-{w, _}  --> Posibles 26º carácter  
+
+{w, _}  --> Posibles 26º carácter 
+
 PwD  --> Caracteres finales extraídos  
 
-<span>De este conjunto de posibilidades podemos intuir, en base a "5_1S_4_sTr0ng" que los caracteres 17 y 26 son un guión bajo "_":  
-"5_1S_4_sTr0ng</span><span style="background-color: yellow; color: red;"> _ </span>s3cUrit1<span style="background-color: yellow; color: red;"> _ </span>PwD   
+---  
+&nbsp;  
 
-Vemos que la contraseña en texto plano se asemeja a:<span style="color: green;"> S_IS_A_STRONG_SECURITY_PWD </span> 
+De este conjunto de posibilidades podemos intuir, en base a `5_1S_4_sTr0ng` que los caracteres 17 y 26 son un guión bajo `_` &nbsp;:  
+`5_1S_4_sTr0ng_s3cUrit1_PwD`   
 
-Con esto conseguimos vislumbrar como será la contraseña al completo: THIS_IS_A_STRONG_SECURITY_PWD 
+Vemos que la contraseña en texto plano se asemeja a: __S_IS_A_STRONG_SECURITY_PWD__
 
-Viendo que las i's y las S se han cambiado por 1 y 5 la contraseña quedaría de la siguiente forma tomando las siguiente posibilidades:
-TH15_1S_4_sTr0ng_s3cUrit1_PwD
-tH15_1S_4_sTr0ng_s3cUrit1_PwD
-Th15_1S_4_sTr0ng_s3cUrit1_PwD
-th15_1S_4_sTr0ng_s3cUrit1_PwD
+Con esto conseguimos vislumbrar como será la contraseña al completo: __THIS_IS_A_STRONG_SECURITY_PWD__ 
+
+Viendo que las i's y las S's se han cambiado por 1 y 5 la contraseña quedaría de la siguiente forma tomando las siguiente posibilidades:
+`TH15_1S_4_sTr0ng_s3cUrit1_PwD`  
+`tH15_1S_4_sTr0ng_s3cUrit1_PwD`  
+`Th15_1S_4_sTr0ng_s3cUrit1_PwD`  
+`th15_1S_4_sTr0ng_s3cUrit1_PwD` 
 
 Enhorabuena!!!! Ya tenemos la contraseña de KeePass, tan solo son 4 posibilidades, estamos muy cerca. Pero ahora. ¿Cómo conseguimos la contraseña de Peter?  
 Necesitamos acceder a la base de datos de KeePass.  
 La base de datos por defecto se llama KeePass.kdbx. Con esto procedemos a dumpear el archivo con volatility.  
 
 ```bash
-vol.py -f memory.dmp --profile=Win10x64_18362 filescan | grep Database
+vol.py -f memory.dmp --profile=Win10x64_18362 filescan | grep Database.kdbx
 ```   
-<span style="color: green;">Volatility Foundation Volatility Framework 2.6.1  
-0x0000ae094accd200  32775      1 RW-rw- \Device\HarddiskVolume3\Users\peter\AppData\Local\Microsoft\Edge\User Data\Default\databases\Databases.db  
-<span style="background-color: yellow; color: red;">0x0000ae094c7aeb00</span><span style="color: green;">      2      0 R--r-- \Device\HarddiskVolume3\Users\peter\Documents\ </span> <span style="background-color: yellow; color: red;"> Database.kdbx </span>  
-<span style="color: green;">0x0000ae094cc6f780     16      0 R--rwd \Device\HarddiskVolume3\Windows\servicing\InboxFodMetadataCache\metadata\DirectX.Configuration.Database~~1.0.mum  </span>
-    
+![Database.kdbx_filescan_output](https://github.com/1ocho3/NCL_V/blob/main/imagenes/Database.kdbx_filescan_output1.png?raw=true)
+     
+En este momento solo queda extraer el archivo del volcado.  
+Nos valdremos de la dirección virtual: `0x0000ae094c7aeb00`  
+Volatility2 no me surtía resultado, por lo que acudí a volatility3 para este paso:
 
 ```bash
+vol3 -f memory.dmp windows.dumpfiles --virtaddr 0x0000ae094c7aeb00
+```  
+![Dumpfiles_volatility3_Output](https://github.com/1ocho3/NCL_V/blob/main/imagenes/Dumpfiles_volatility3_Output.png?raw=true)  
 
-```
-```bash
+Ya tenemos todo lo que necesitamos, las 4 posibles `Master Password` del KeePass de Peter y la base de datos.
+Ahora en nuestra máquina descargaremos KeePass2 o KeePassxc y abriremos la base de datos extraída:
+Probamos las contraseñas y descubrimos que __¡BINGO!__ la contraseña es la opción `tH15_1S_4_sTr0ng_s3cUrit1_PwD`  
 
-```
-```bash
+![KeePass_Master_PwD](https://github.com/1ocho3/NCL_V/blob/main/imagenes/KeePass_Master_PwD1.png?raw=true)  
 
-```
-```bash
+Una vez dentro de la base de datos vemos tres credenciales guardados:  
 
-```
-```bash
+El `OnlyFans` de Peter.
+El Usuario y contraseña de la plataforma de ajedrez de peter.  
+Y las credenciales de su ordenador:  
 
+![Peter_Credentiasl_Even_OnlyFans_...._Incredible](https://github.com/1ocho3/NCL_V/blob/main/imagenes/Peter_Credentiasl_Even_OnlyFans_...._Incredible.png?raw=true)  
+  
+Obviando todo lo que es OFbviamente prescindible y centrándonos en nuestros valores, sobre todo en el de __CONFIDENCIALIDAD__, entraremos directos en los credenciales que parecen apuntar al ordenador de peter `peter computer`  
+
+![Contraseña_sacada_del_ordenador_de_Peter_A_través_de_la_BD_de_KeePass](https://github.com/1ocho3/NCL_V/blob/main/imagenes/Pete_Come_Pato_hmmmmm.png?raw=true)  
+
+......   ·.·    Sin comentarios....
+
+__CONSEGUIDO!!__ Recuerda, al igual que un llavero sirve para perder todas las llaves a la vez, KeepPass sirve para filtrar todas tus contrseñas a la vez.  
+No te olvides, nada es seguro ante el hacking, y todo es vulnerable. Los sistemas son seguros hasta que dejan de serlos.  
+
+Si tienes algún tipo de información comprometedora, ten por seguro que el sitio más seguro para guardar su contraseña es tu memoria. 
+No lo dudes!!
+
+
+```txt
+ ________   ________  ________  ________   ________  ________          ________   ________  
+|\   ___  \|\   __  \|\   ____\|\   ___  \|\   __  \|\   ____\        |\_____  \ |\_____  \ 
+\ \  \\ \  \ \  \|\  \ \  \___|\ \  \\ \  \ \  \|\  \ \  \___|        \|____|\ /_ \|___/  /|
+ \ \  \\ \  \ \  \\\  \ \  \    \ \  \\ \  \ \  \\\  \ \  \                 \|\  \    /  / /
+  \ \  \\ \  \ \  \\\  \ \  \____\ \  \\ \  \ \  \\\  \ \  \____           __\_\  \  /  / / 
+   \ \__\\ \__\ \_______\ \_______\ \__\\ \__\ \_______\ \_______\        |\_______\/__/ /  
+    \|__| \|__|\|_______|\|_______|\|__| \|__|\|_______|\|_______|        \|_______||__|/   
+                                                                                                                                                     
+
+                                                                                      
+                                                                              
+        :::'###:::'##::: ##'########:'########:'########:'######::                    
+        ::'## ##:::###:: ##:##.... ##:##.... ##:##.....:'##... ##:                    
+        :'##:. ##::####: ##:##:::: ##:##:::: ##:##:::::::##:::..::                    
+        '##:::. ##:## ## ##:##:::: ##:########::######::. ######::                    
+         #########:##. ####:##:::: ##:##.. ##:::##...::::..... ##:                    
+         ##.... ##:##:. ###:##:::: ##:##::. ##::##::::::'##::: ##:                    
+         ##:::: ##:##::. ##:########::##:::. ##:########. ######::                    
+        ..:::::..:..::::..:........::..:::::..:........::......:::     
+                                                     
 ```
