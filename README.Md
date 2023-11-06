@@ -84,7 +84,7 @@ vol.py -f memory.dmp --profile=Win10x64_18362 memdump --pid 4288 -D [DIRECTORIO 
 ![KeePass.dmp](https://github.com/1ocho3/NCL_V/blob/main/imagenes/KeePass_dump.png?raw=true)  
 
 
-Una vez tenemos la memoria del proceso volcada, antes que tratar de hacer nada, vamos a investigar información sobre el programa.  
+Una vez tenemos la memoria del proceso volcada, antes que tratar de hacer nada, vamos a investigar información del programa.  
 Con `strings` y `grep` hacemos una búsqueda con el fin de tratar de averiguar la versión del programa.
 
 
