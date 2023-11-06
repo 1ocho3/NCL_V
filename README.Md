@@ -93,7 +93,7 @@ strings 4288.dmp | grep KeePass
 ```
 Que devuelve lo siguiente:  
 
-![KeePass_2.53.1](https://github.com/1ocho3/NCL_V/blob/main/imagenes/KeePass_2.53.1.png?raw=true)
+![KeePass_2.53.1](https://github.com/1ocho3/NCL_V/blob/main/imagenes/KeePass_2.53.1_v2.png?raw=true)
 
 Nos encontramos con la versión 2.53.1, en el momento de la competición la última versión es la 2.55.
 Sabemos que estamos trabajando con una versión anterior, podemos buscar alguna vulnerabilidad.  
