@@ -1,6 +1,4 @@
 # Andrés de la Hoz Camiroaga  
-5ª Edición de la National Cyberleague de la Guardia Civil  
-
 ### RETO-2 National Cyberleague - Guardia Civil
 ##### @nocnoc37
 ###### Equipo NotAnonymous - UFV.Madrid
