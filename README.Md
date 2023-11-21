@@ -26,7 +26,7 @@ git clone https://github.com/1ocho3/NATIONAL_CYBERLEAGUE
 Entra en el directorio del volcado de memoria:
 
 ```bash
-cd FILES/RETO2_SPLIT_ZIPs
+cd volcado
 ```  
 Descomprime el primer fichero de los zips segmentados:
 
