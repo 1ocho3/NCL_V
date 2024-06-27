@@ -196,9 +196,9 @@ Obviando todo lo que es OFbviamente prescindible y centrándonos en nuestros val
 ......   ·.·    Sin comentarios....
 
 __CONSEGUIDO!!__ Recuerda, al igual que un llavero sirve para perder todas las llaves a la vez, KeepPass sirve para filtrar todas tus contraseñas a la vez.  
-No te olvides, nada es seguro ante el hacking, y todo es vulnerable. Los sistemas son seguros hasta que dejan de serlos.  
+No te olvides, nada es seguro y todo es vulnerable o lo será. Los sistemas son seguros hasta que dejan de serlos.  
 
-Si tienes algún tipo de información comprometedora, ten por seguro que el sitio más protegido para guardar tu contraseña es tu memoria. 
+Ten por seguro que el sitio más protegido donde puedes guardar tu contraseña es tu cabeza. 
 No lo dudes!!
 
 
