@@ -1,4 +1,4 @@
-# Andrés de la Hoz Camiroaga  
+# NocNoc37
 ### RETO-2 National Cyberleague - Guardia Civil
 ##### @nocnoc37
 ###### Equipo NotAnonymous - UFV.Madrid
@@ -42,12 +42,12 @@ El resultado es un fichero llamado `memory.dmp`
 
 #### ANÁLISIS INICIAL:
 
-Para este reto usaremos volatility. En este caso usaré volatility2, se puede conseguir el mismo resultado con volatility3, solo se debe omitir los pasos de identificación de perfil, y buscar los comandos homólogos en esta versión.  
+Para este reto usaremos volatility. En este caso usaré volatility2, se puede conseguir el mismo resultado con volatility3.  
 
 &nbsp;  
 
 
-Lo primero que haré será un `kdbgscan` que devuelve los posibles valores KDBG. La razón por la que uso este plugin y no `imageinfo` es simple y llanamente porque la búsqueda es más exahustiva y tiene una mayor probabilidad de acierto identificando el perfil del volcado frente a imageinfo.
+Lo primero será realizar un `kdbgscan`, en este reto me ha dado mejores resultados que `imageinfo`.
 ```bash
 vol.py -f memory.dmp kdbgscan
 ```
@@ -55,13 +55,13 @@ vol.py -f memory.dmp kdbgscan
 
 Desde ahora en adelante, especificaremos este perfil cada vez que ejecutemos un plugin.
 
-Lo siguiente que pensé fue en descargar inmediatamente los hashes NTLM del volcado pero pronto descubriría que ese no era el camino.
-Observar los procesos es uno de los puntos de referencia cuando no sepamos por donde seguir. Y en este caso hay un proceso que destaca sobre el resto.
+Lo siguiente, podemos pensar que sería descargar inmediatamente los hashes NTLM del volcado pero pronto se descubre que no es el camino.
+Observar los procesos es un gran punto de salida cuando no sepamos por donde seguir. En este caso hay un proceso que destaca sobre el resto.
 
 ```bash
 vol.py -f memory.dmp --profile=Win10x64_18362 pslist
 ```
-Este es el output que recibimos (simplificado), donde podemos observar el proceso `KeePass`
+Este es el output que recibimos, donde podemos observar el proceso `KeePass`
 
 Volatility Foundation Volatility Framework 2.6.1  
 
@@ -75,8 +75,8 @@ Volatility Foundation Volatility Framework 2.6.1
 |0xffffae094a6c83d8|svchost.exe|6988|696|10|0|0|2023-05-18 11:43:43 UTC+0000|
 |0xffffae094a2871d8|wuauclt.exe|1372|1436|5|0|0|2023-05-18 11:44:15 UTC+0000|
 
-Podemos tratar de dumpearlo, encontrar su versión y buscar algún tipo de vulnerabilidad.  
-No podemos hacer un procdump del archivo KeePass.exe debido a la paginación pero podremos realizar un memdump que nos aportará más información, no solo el ejecutable como resuelve procdump.  
+Podemos tratar de descargar un dump, encontrar su versión y buscar algún tipo de vulnerabilidad.  
+No podemos hacer un procdump del archivo KeePass.exe debido a la paginación pero podremos realizar un memdump que además nos aportará más información, no solo el ejecutable como hace procdump.  
  
 ```bash
 vol.py -f memory.dmp --profile=Win10x64_18362 memdump --pid 4288 -D [DIRECTORIO DE SALIDA EXISTENTE] 
@@ -84,35 +84,35 @@ vol.py -f memory.dmp --profile=Win10x64_18362 memdump --pid 4288 -D [DIRECTORIO 
 ![KeePass.dmp](https://github.com/1ocho3/NCL_V/blob/main/imagenes/KeePass_dump.png?raw=true)  
 
 
-Una vez tenemos la memoria del proceso volcada, antes que tratar de hacer nada más, vamos a investigar la información del programa.  
-Con `strings` y `grep` hacemos una búsqueda con el fin de tratar de averiguar la versión del programa.
+Una vez tenemos la memoria del proceso volcada, antes de tratar de hacer nada más, lo mejor será investigar la información del programa.  
+Con `strings` y `grep` hacemos una búsqueda con el fin de averiguar la versión del programa.
 
 
 ```bash
 strings 4288.dmp | grep KeePass
 ```
-Que devuelve lo siguiente:  
+Devuelve lo siguiente:  
 
 ![KeePass_2.53.1](https://github.com/1ocho3/NCL_V/blob/main/imagenes/KeePass_2.53.1_v2.png?raw=true)
 
-Nos encontramos con la versión 2.53.1, en el momento de la competición la última versión es la 2.55.
-Sabemos que estamos trabajando con una versión anterior, podemos buscar alguna vulnerabilidad.  
-Entre las más prometedoras encontramos el CVE-2023-32784:  
+Nos encontramos con la versión 2.53.1, en el momento de la competición la última versión es la 2.55
+Sabemos que estamos trabajando con una versión anterior, desactualizada, podemos buscar alguna vulnerabilidad.  
+Entre las más prometedoras encontramos el `CVE-2023-32784`:  
 
 ![PoC-CVE-2023-32784](https://github.com/1ocho3/NCL_V/blob/main/imagenes/POC%20CVE-2023-32784.png?raw=true)
 
-Para ejecutar el PoC debemos proporcionar el volcado del porceso: (mirar el repositorio del CVE para instalar las dependencias)  
+Para ejecutar el PoC debemos proporcionar el volcado del porceso:
 
 
 ```bash
 dotnet run 4288.dmp
 ```
-Pero en una primera instancia descubrimos que no consigue sacar la contraseña:
+Pero en una primera instancia descubrimos que no es capaz de extraer la contraseña:
 
 ![4288_PoC_Output](https://github.com/1ocho3/NCL_V/blob/main/imagenes/4288_PoC_Output.png?raw=true)
 
-Después de una investigación mas profunda sobre el PoC descubrimos que podemos ejecutarlo, sobre un volcado del proceso o sobre el volcado de memoria completo de una máquina.   
-Con esto en mente, ahora tratamos de hacer lo mismo pero con nuestro volcado de memoria.  
+Una investigación mas profunda del PoC descubre que podemos ejecutarlo sobre un volcado del proceso, o sobre el volcado de memoria COMPLETO de la máquina.   
+Con esto en mente, tratamos de hacer lo mismo.  
 
 
 ```bash
@@ -120,9 +120,9 @@ dotnet run memory.dmp
 ```  
 ![memory.dmp_PoC_Ouput](https://github.com/1ocho3/NCL_V/blob/main/imagenes/memory.dmp_PoC_Ouput.png?raw=true)  
 
-Tenemos la contraseña a falta de cerciorar cuales son los caracteres inciales, una de las características de esta vulnerabilidad es que el primer caracter no se puede extraer y los siguientes pueden ser inexactos. Pero analicemos el output:  
+Tenemos la contraseña a falta de discernir cuales son los caracteres inciales. La característica fundamental de esta vulnerabilidad es que el primer caracter no se puede extraer y algunos pueden tomar rangos de valores. Pero analicemos el output:  
 
-Si separamos lo que nos devuelve nos encontramos con lo siguiente:  
+Si separamos lo que devuelve, encontramos lo siguiente:  
 
 ●  --> Primer caracter (desconocido) 
 
@@ -158,16 +158,16 @@ Viendo que las i's y las S's se han cambiado por 1 y 5 la contraseña quedaría 
 
 Enhorabuena!!!! Ya tenemos la contraseña de KeePass, tan solo son 4 posibilidades, estamos muy cerca. Pero ahora. ¿Cómo conseguimos la contraseña de Peter?  
 Necesitamos acceder a la base de datos de KeePass.  
-La base de datos por defecto se llama KeePass.kdbx. Con esto procedemos a dumpear el archivo con volatility.  
+La base de datos por defecto se llama KeePass.kdbx. Con esto procedemos a buscar y dumpear el archivo.  
 
 ```bash
 vol.py -f memory.dmp --profile=Win10x64_18362 filescan | grep Database.kdbx
 ```   
 ![Database.kdbx_filescan_output](https://github.com/1ocho3/NCL_V/blob/main/imagenes/Database.kdbx_filescan_output1.png?raw=true)
      
-En este momento solo queda extraer el archivo del volcado.  
+En este momento solo queda extraer el archivo.  
 Nos valdremos de la dirección virtual: `0x0000ae094c7aeb00`  
-Volatility2 no me surtía resultado, por lo que acudí a volatility3 para este paso:
+Volatility2 no me surtió resultado, por lo que acudí a volatility3 para este paso:
 
 ```bash
 vol3 -f memory.dmp windows.dumpfiles --virtaddr 0x0000ae094c7aeb00
@@ -195,11 +195,9 @@ Obviando todo lo que es OFbviamente prescindible y centrándonos en nuestros val
 
 ......   ·.·    Sin comentarios....
 
-__CONSEGUIDO!!__ Recuerda, al igual que un llavero sirve para perder todas las llaves a la vez, KeepPass sirve para filtrar todas tus contraseñas a la vez.  
-No te olvides, nada es seguro y todo es vulnerable o lo será. Los sistemas son seguros hasta que dejan de serlos.  
+__CONSEGUIDO!!__ Recuerda, al igual que un llavero sirve para perder todas las llaves a la vez, KeepPass sirve para filtrar todas tus contraseñas de un golpe.  
+No te olvides, los sistemas son seguros hasta que dejan de serlos.  
 
-Ten por seguro que el sitio más protegido donde puedes guardar tu contraseña es tu cabeza. 
-No lo dudes!!
 
 
 ```txt
